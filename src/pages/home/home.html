@@ -13,9 +13,5 @@
 </ion-header>
 
 <ion-content padding>
-  <ul>
-    <li class="shopping-item" *ngFor="let item of pantry">
-      <shopping-item [item]=item></shopping-item>
-    </li>
-  </ul>
+  <shopping-item *ngFor="let item of pantry" [item]=item></shopping-item>
 </ion-content>

@@ -1,6 +1,12 @@
 shopping-item {
 
-    warning {
+    .warning {
         color: color($colors, warning, base);
     }
+
+    .item-qty-span {
+        float: right;
+        margin-right: 30px;
+    }
+
 }

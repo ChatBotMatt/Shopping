@@ -1,5 +1,15 @@
-<li>
-  <span class="item-name-span">{{item.name}}</span> 
-  <span *ngIf="quantity > warningQuantity" class="item-qty-span">{{item.quantity}}</span>
-  <span *ngIf="quantity <= warningQuantity" class="item-qty-span warning">{{item.quantity}}</span>
-</li>
+<ion-card (tap)="showOptions()" (press)="showOptions()">
+  <ion-card-header>
+    {{item.name}}
+  </ion-card-header>
+  
+  <ion-card-content>  
+    {{item.quantity}}
+    <span *ngIf="item.quantity > item.warningQuantity" class="item-qty-span">
+      {{item.quantity}}
+    </span>
+    <span *ngIf="item.quantity <= item.warningQuantity" class="item-qty-span warning">
+      {{item.quantity}}
+    </span>
+  </ion-card-content>
+</ion-card>

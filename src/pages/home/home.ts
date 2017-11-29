@@ -3,13 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { PantryMock } from '../../mocks/shopping-item'
 import { ShoppingItem } from '../../models/shopping-item'
 
-/**
- * Generated class for the HomePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -24,7 +17,6 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad HomePage');
+    console.log('Pantry Page Loaded.');
   }
-
 }
