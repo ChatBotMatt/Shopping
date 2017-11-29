@@ -1,0 +1,5 @@
+<li>
+  <span class="item-name-span">{{item.name}}</span> 
+  <span *ngIf="quantity > warningQuantity" class="item-qty-span">{{item.quantity}}</span>
+  <span *ngIf="quantity <= warningQuantity" class="item-qty-span warning">{{item.quantity}}</span>
+</li>
