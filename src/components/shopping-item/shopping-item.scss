@@ -9,4 +9,17 @@ shopping-item {
         margin-right: 30px;
     }
 
+    .item-card {
+        padding: 10px;
+    }
+
+    .item-header {
+        padding-bottom: 0px;
+        padding-right: 10px;
+    }
+
+    .item-header, .item-body {
+        display: inline;
+    }
+
 }

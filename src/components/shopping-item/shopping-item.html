@@ -1,10 +1,9 @@
-<ion-card (tap)="showOptions()" (press)="showOptions()">
-  <ion-card-header>
+<ion-card class="item-card" (tap)="showOptions()" (press)="showOptions()">
+  <ion-card-header class="item-header">
     {{item.name}}
   </ion-card-header>
   
-  <ion-card-content>  
-    {{item.quantity}}
+  <ion-card-content class="item-body">  
     <span *ngIf="item.quantity > item.warningQuantity" class="item-qty-span">
       {{item.quantity}}
     </span>
