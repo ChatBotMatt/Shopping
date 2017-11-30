@@ -1,0 +1,17 @@
+.shopping-alert {
+
+    .shopping-alert-button {
+        margin: auto; //Centres it.
+        color: white;
+        font-family: arial;
+    }
+
+    .submit-button {
+        background-color: color($colors, submit, base);
+    }
+
+    .delete-button {
+        background-color: color($colors, danger, base);
+    }
+
+}

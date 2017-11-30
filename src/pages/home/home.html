@@ -10,7 +10,12 @@
     <ion-title>Pantry</ion-title>
   </ion-navbar>
 
-  <ion-icon name="add" (tap)="addItem()" (press)="addItem()"></ion-icon>
+  <ion-buttons end>
+    <button class="add-icon" ion-button icon-only (tap)="addItem()" (press)="addItem()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-buttons>
+  
 </ion-header>
 
 <ion-content padding>

@@ -12,7 +12,7 @@ import { AlertController } from 'ionic-angular/components/alert/alert-controller
 export class UtilityProvider {
 
   constructor(public http: HttpClient, private alertCtrl: AlertController) {
-    console.log('Hello UtilityProvider Provider');
+    
   }
 
   /**

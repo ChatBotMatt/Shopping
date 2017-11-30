@@ -23,6 +23,17 @@ export class HomePage {
     this.pantry = Array.from(new Set(PantryMock)); //Filter out duplicates
   }
 
+  private async addItem() {
+    console.log("Test");
+    let newItem: ShoppingItem = {} as ShoppingItem;
+    let data: any = await this.showEditAlert("", 0,0,);
+    newItem.quantity = data.qty;
+    newItem.name = data.name;
+    newItem.warningQuantity = data.warningQty;
+
+    this.pantry.push(newItem);
+  }
+
   /**
    * Handles emitted events from the ShoppingItem components.
    * @param data The data emitted from the component.
@@ -33,7 +44,7 @@ export class HomePage {
     
     switch (data.type) {
       case "edit":
-        let data: any = await this.edit(item);
+        let data: any = await this.edit(item.name, item.quantity, item.warningQuantity);
 
         item.quantity = data.qty;
         item.name = data.name;
@@ -50,11 +61,29 @@ export class HomePage {
   }
 
   /**
-   * Handles the editing of an item. Displays an alert with an input field for it, and edits the item in the pantry.
-   * @param item The item to edit.
+   * Handles the editing of an item. 
+   * Displays an alert with an input field for it, returns the edited form of the data.
+   * 
+   * @param name The item's name to use as an initial value.
+   * @param qty The item's quantity to use as an initial value.
+   * @param warningQty The item's warning quantity to use as an initial value.
+   * 
+   * @param namePlaceholder The placeholder for the name input. Optional, default value of "Item Name".
+   * @param qtyPlaceholder The placeholder for the quantity input. Optional, default value of "Item Quantity".
+   * @param warningPlaceholder The placeholder for the warning quantity input. Optional, default value of "Item Warning Quantity".
+   * 
+   * @return The edited data.
    */
-  private async edit(item: ShoppingItem): Promise<Object> {
-    let data: any = await this.showEditAlert(item);
+  private async edit(
+    name: string, 
+    qty: number,
+    warningQty: number,
+
+    namePlaceholder?: string, 
+    qtyPlaceholder?: string, 
+    warningPlaceholder?: string
+  ): Promise<Object> {
+    let data: any = await this.showEditAlert(name, qty, warningQty, namePlaceholder, qtyPlaceholder, warningPlaceholder);
     return data;
   }
 
@@ -69,38 +98,52 @@ export class HomePage {
 
     /**
    * Shows the Edit Alert, which displays data for the user to edit as they wish.
-   * @param item The item to edit. Used to populate the input fields initially, but not modified.
+   * @param name The item's name to use as an initial value.
+   * @param qty The item's quantity to use as an initial value.
+   * @param warningQty The item's warning quantity to use as an initial value.
+   * 
+   * @param namePlaceholder The placeholder for the name input. Default value of "Item Name".
+   * @param qtyPlaceholder The placeholder for the quantity input. Default value of "Item Quantity".
+   * @param warningPlaceholder The placeholder for the warning quantity input. Default value of "Item Warning Quantity".
+   * 
    * @return The data from the user input wrapped in a promise.
    */
-  private showEditAlert(item: ShoppingItem) {
+  private showEditAlert(
+    name: string, 
+    qty: number,
+    warningQty: number,
+    namePlaceholder: string = "Item Name", 
+    qtyPlaceholder: string = "Item Quantity", 
+    warningPlaceholder: string = "Item Warning Quantity"
+  ) {
     return new Promise((resolve, reject) => this.utility.showAlert(
         "",
         "Edit",
         [{
           text: "submit",
           handler: (data) => {return resolve(data)},
-          cssClass: "shopping-alert-button"
+          cssClass: "shopping-alert-button submit-button"
         }],
         [
           {
             name: "name",
             type: "text",
-            value: item.name,
-            placeholder: "New Name",
+            placeholder: namePlaceholder,
+            value: name,
           },
           {
             name: "qty",
             type: "number",
-            value: item.quantity,
-            placeholder: "New Quantity",
+            placeholder: qtyPlaceholder,
+            value: qty,
           },
           {
             name: "warningQty",
             type: "number",
-            value: item.warningQuantity,
-            placeholder: "New Warning Quantity",
+            placeholder: warningPlaceholder,
+            value: warningQty,
           },
-        ]
+        ],
       ));
   }
 
