@@ -32,6 +32,7 @@ export class ShoppingItemComponent {
           },
           cssClass: "sheet-button edit-button",
         },
+        
         {
           text: "Delete",
           handler: () => {

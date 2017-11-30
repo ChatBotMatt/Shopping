@@ -23,10 +23,6 @@ export class HomePage {
     this.pantry = Array.from(new Set(PantryMock)); //Filter out duplicates
   }
 
-  ionViewDidLoad() {
-    console.log('Pantry Page Loaded.');
-  }
-
   /**
    * Handles emitted events from the ShoppingItem components.
    * @param data The data emitted from the component.
@@ -34,27 +30,18 @@ export class HomePage {
   private async handle(data) {
 
     let item = this.pantry.filter(checkItem => checkItem.name == data.itemName)[0];
-    console.log(item);
-
+    
     switch (data.type) {
       case "edit":
-        let data: any = await this.edit(item).then(
-          resolve => {return resolve;}, 
-          reject => {return reject;}
-        );
+        let data: any = await this.edit(item);
 
-        console.log(data);
         item.quantity = data.qty;
         item.name = data.name;
         item.warningQuantity = data.warningQty;
-        console.log(this.pantry.filter(checkItem => checkItem == item)[0]);
         break;
 
       case "delete":
-        let deleteItem = await this.delete(item).then(
-          resolve => {return resolve;}, 
-          reject => {return reject;}
-        );
+        let deleteItem = await this.delete(item.name);
         if (deleteItem) {
           this.pantry = this.pantry.filter(checkItem => checkItem != item);
         }
@@ -67,19 +54,22 @@ export class HomePage {
    * @param item The item to edit.
    */
   private async edit(item: ShoppingItem): Promise<Object> {
-    //let item: ShoppingItem = this.pantry.filter(item => item.name == name)[0];
-
-    let data: any = await this.showEditAlert(item).then(
-      resolve => {return resolve;}, 
-      reject => {return reject;}
-    );
-
+    let data: any = await this.showEditAlert(item);
     return data;
   }
 
   /**
+   * Displays an alert to the user asking if they really want to delete the item or not.
+   * @param name The item-to-delete's name.
+   */
+  private async delete(name: string): Promise<boolean> {
+    let deleteItem: any = await this.showDeleteAlert(name);
+    return deleteItem;  
+  }
+
+    /**
    * Shows the Edit Alert, which displays data for the user to edit as they wish.
-   * @param item The item to edit. Used to populate the input fields with initial values, but not modified.
+   * @param item The item to edit. Used to populate the input fields initially, but not modified.
    * @return The data from the user input wrapped in a promise.
    */
   private showEditAlert(item: ShoppingItem) {
@@ -112,21 +102,9 @@ export class HomePage {
           },
         ]
       ));
-}
-
-  private async delete(item: ShoppingItem): Promise<boolean> {
-
-    //let item: ShoppingItem = this.pantry.filter(item => item.name == name)[0];
-    
-    let deleteItem: boolean = await this.showDeleteAlert().then(
-      resolve => {return resolve;}, 
-      reject => {return reject;}
-    );
-
-    return deleteItem;  
   }
 
-  private showDeleteAlert() {
+  private showDeleteAlert(name: string) {
     return new Promise((resolve, reject) => this.utility.showAlert(
       `Are you sure you want to delete the item ${name}?`,
       `Delete ${name}?`,

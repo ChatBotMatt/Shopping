@@ -22,8 +22,6 @@ import { HttpClientModule } from '@angular/common/http';
     ContactPage,
     HomePage,
     TabsPage,
-    //ShoppingItemComponent,
-    //ComponentsModule
   ],
   imports: [
     BrowserModule,
