@@ -13,6 +13,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ShoppingItemComponent } from '../components/shopping-item/shopping-item';
 import { ComponentsModule } from '../components/components.module'
 import { UtilityProvider } from '../providers/utility/utility';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { UtilityProvider } from '../providers/utility/utility';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    ComponentsModule
+    ComponentsModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

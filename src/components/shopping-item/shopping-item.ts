@@ -1,14 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { ShoppingItem } from '../../models/shopping-item';
 import { ActionSheetController } from 'ionic-angular';
+import { UtilityProvider } from '../../providers/utility/utility';
+import { EventEmitter } from '@angular/core';
 
-
-/**
- * Generated class for the ShoppingItemComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'shopping-item',
   templateUrl: 'shopping-item.html'
@@ -16,47 +11,43 @@ import { ActionSheetController } from 'ionic-angular';
 export class ShoppingItemComponent {
 
   @Input() private item: ShoppingItem;
+  @Output() private emit: EventEmitter<Object>;
 
-  constructor(private actionCtrl: ActionSheetController) {
-    
+  constructor(private actionCtrl: ActionSheetController, private utility: UtilityProvider) {
+    this.emit = new EventEmitter<string>();
   }
 
-  private showOptions() : void {
+  private showOptions() {
+
     const optionsSheet = this.actionCtrl.create({
       title: "Options",
       buttons: [
         {
           text: "Edit",
-          handler: () => {this.edit()},
+          handler: () => {
+            this.emit.emit({
+              type: "edit", 
+              itemName: this.item.name
+            })
+          },
           cssClass: "sheet-button edit-button",
         },
         {
-          text: "Change Quantity",
-          handler: () => {this.changeQuantity()},
-          cssClass: "sheet-button qty-button",
-        },
-        {
           text: "Delete",
-          handler: () => {this.delete()},
+          handler: () => {
+            this.emit.emit({
+              type: "delete", 
+              itemName: this.item.name
+            })
+          },
           cssClass: "sheet-button delete-button",
         },
       ],
       cssClass: "sheet options-sheet"
     });
 
-    optionsSheet.present();
-  }
-
-  private edit() : void {
-    console.log("Edit");
-  }
-
-  private changeQuantity() : void {
-    console.log("Change Quantity");
-  }
-
-  private delete() : void {
-    console.log("Delete");
+    let data = optionsSheet.present();
+      
   }
 
 }

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { PantryMock } from '../../mocks/shopping-item'
 import { ShoppingItem } from '../../models/shopping-item'
+import { UtilityProvider } from '../../providers/utility/utility';
+import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 
 @IonicPage()
 @Component({
@@ -12,11 +14,135 @@ export class HomePage {
 
   private pantry: ShoppingItem[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.pantry = PantryMock;
+  constructor(
+    private navCtrl: NavController, 
+    private navParams: NavParams, 
+    private utility: UtilityProvider,
+    private alertCtrl: AlertController,
+  ) {
+    this.pantry = Array.from(new Set(PantryMock)); //Filter out duplicates
   }
 
   ionViewDidLoad() {
     console.log('Pantry Page Loaded.');
   }
+
+  /**
+   * Handles emitted events from the ShoppingItem components.
+   * @param data The data emitted from the component.
+   */
+  private async handle(data) {
+
+    let item = this.pantry.filter(checkItem => checkItem.name == data.itemName)[0];
+    console.log(item);
+
+    switch (data.type) {
+      case "edit":
+        let data: any = await this.edit(item).then(
+          resolve => {return resolve;}, 
+          reject => {return reject;}
+        );
+
+        console.log(data);
+        item.quantity = data.qty;
+        item.name = data.name;
+        item.warningQuantity = data.warningQty;
+        console.log(this.pantry.filter(checkItem => checkItem == item)[0]);
+        break;
+
+      case "delete":
+        let deleteItem = await this.delete(item).then(
+          resolve => {return resolve;}, 
+          reject => {return reject;}
+        );
+        if (deleteItem) {
+          this.pantry = this.pantry.filter(checkItem => checkItem != item);
+        }
+        break;
+    }
+  }
+
+  /**
+   * Handles the editing of an item. Displays an alert with an input field for it, and edits the item in the pantry.
+   * @param item The item to edit.
+   */
+  private async edit(item: ShoppingItem): Promise<Object> {
+    //let item: ShoppingItem = this.pantry.filter(item => item.name == name)[0];
+
+    let data: any = await this.showEditAlert(item).then(
+      resolve => {return resolve;}, 
+      reject => {return reject;}
+    );
+
+    return data;
+  }
+
+  /**
+   * Shows the Edit Alert, which displays data for the user to edit as they wish.
+   * @param item The item to edit. Used to populate the input fields with initial values, but not modified.
+   * @return The data from the user input wrapped in a promise.
+   */
+  private showEditAlert(item: ShoppingItem) {
+    return new Promise((resolve, reject) => this.utility.showAlert(
+        "",
+        "Edit",
+        [{
+          text: "submit",
+          handler: (data) => {return resolve(data)},
+          cssClass: "shopping-alert-button"
+        }],
+        [
+          {
+            name: "name",
+            type: "text",
+            value: item.name,
+            placeholder: "New Name",
+          },
+          {
+            name: "qty",
+            type: "number",
+            value: item.quantity,
+            placeholder: "New Quantity",
+          },
+          {
+            name: "warningQty",
+            type: "number",
+            value: item.warningQuantity,
+            placeholder: "New Warning Quantity",
+          },
+        ]
+      ));
+}
+
+  private async delete(item: ShoppingItem): Promise<boolean> {
+
+    //let item: ShoppingItem = this.pantry.filter(item => item.name == name)[0];
+    
+    let deleteItem: boolean = await this.showDeleteAlert().then(
+      resolve => {return resolve;}, 
+      reject => {return reject;}
+    );
+
+    return deleteItem;  
+  }
+
+  private showDeleteAlert() {
+    return new Promise((resolve, reject) => this.utility.showAlert(
+      `Are you sure you want to delete the item ${name}?`,
+      `Delete ${name}?`,
+      [
+        {
+          text: "Yes, delete it.",
+          handler: () => {return resolve(true)},
+          cssClass: "shopping-alert-button delete-button"
+        },
+        {
+          text: "No, keep it.",
+          handler: () => {return resolve(false)},
+          cssClass: "shopping-alert-button submit-button"
+        }
+      ]
+    ));
+  }
+
 }
