@@ -4,6 +4,8 @@ import { PantryMock } from '../../mocks/shopping-item'
 import { ShoppingItem } from '../../models/shopping-item'
 import { UtilityProvider } from '../../providers/utility/utility';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
+import { Storage } from '@ionic/storage';
+import { ShoppingItemComponent } from '../../components/shopping-item/shopping-item';
 
 @IonicPage()
 @Component({
@@ -19,12 +21,33 @@ export class HomePage {
     private navParams: NavParams, 
     private utility: UtilityProvider,
     private alertCtrl: AlertController,
+    private storage: Storage,
   ) {
     this.pantry = Array.from(new Set(PantryMock)); //Filter out duplicates
   }
 
+  async ionViewWillEnter() {
+    await this.setupStorage();
+    let pantryPromise: ShoppingItem[] = await this.setupPantry();
+    this.pantry = await Array.from<ShoppingItem>(new Set(pantryPromise));
+  }
+
+  private async setupStorage() {
+    await this.storage.ready().then(x => this.storage.set("pantry", this.pantry));
+  }
+
+  private async setupPantry() {
+    return await this.storage.get("pantry").then(
+      resolve => {
+        return resolve;
+      },
+      reject => {
+        return PantryMock; 
+      }
+    );
+  }
+
   private async addItem() {
-    console.log("Test");
     let newItem: ShoppingItem = {} as ShoppingItem;
     let data: any = await this.showEditAlert("", 0,0,);
     newItem.quantity = data.qty;

@@ -14,6 +14,7 @@ import { ShoppingItemComponent } from '../components/shopping-item/shopping-item
 import { ComponentsModule } from '../components/components.module'
 import { UtilityProvider } from '../providers/utility/utility';
 import { HttpClientModule } from '@angular/common/http';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     ComponentsModule,
-    HttpClientModule
+    HttpClientModule,
+    IonicStorageModule.forRoot(),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
